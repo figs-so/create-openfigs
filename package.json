@@ -1,0 +1,41 @@
+{
+  "name": "create-openfigs",
+  "version": "0.1.0",
+  "description": "Scaffold a new OpenFigs fleet — a file-based skeleton for building back-office AI-employee agents that report to Figs.",
+  "type": "module",
+  "bin": {
+    "create-openfigs": "./index.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "lib/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "keywords": [
+    "openfigs",
+    "figs",
+    "ai-agents",
+    "agent",
+    "scaffold",
+    "create"
+  ],
+  "license": "MIT",
+  "homepage": "https://figs.so",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/figs-so/create-openfigs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/figs-so/create-openfigs/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

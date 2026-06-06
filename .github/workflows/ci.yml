@@ -1,0 +1,35 @@
+name: CI
+
+# Smoke-tests scaffolding offline: a fresh fleet must come out with live runtime symlinks and a
+# working first agent. We fetch the skeleton from a LOCAL openfigs checkout (--from) so CI never
+# depends on the published repo or the network. The live github: fetch is covered post-launch.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [18, 20]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out openfigs (test skeleton source)
+        uses: actions/checkout@v4
+        with:
+          repository: figs-so/openfigs
+          path: .openfigs
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # Zero-dependency package — nothing to install.
+      - name: Smoke test (scaffold + assert symlinks)
+        run: npm test
+        env:
+          OPENFIGS_TEST_SOURCE: ${{ github.workspace }}/.openfigs
