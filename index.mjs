@@ -58,18 +58,26 @@ async function main() {
 
     // 3. First agent (reuse the skeleton's canonical scaffolder).
     let agent = opts.agent
-    if (!agent && rl) {
-      const ans = (await rl.question("Name your first agent (snake_case), or Enter to skip: ")).trim()
-      agent = ans || null
-    }
-    if (agent) {
-      if (!AGENT_RE.test(agent)) throw new Error(`"${agent}" isn't a valid agent name (snake_case; nesting ok: dept/name).`)
-      execFileSync("node", ["scripts/new-agent.mjs", agent], { cwd: target, stdio: "inherit" })
-    }
+    if (!agent && rl) agent = await askAgentName(rl)
+    if (agent) execFileSync("node", ["scripts/new-agent.mjs", agent], { cwd: target, stdio: "inherit" })
 
     nextSteps(dir, agent)
   } finally {
     rl?.close()
+  }
+}
+
+/** Prompt for the first agent's name; re-ask on invalid input instead of dying mid-scaffold. */
+async function askAgentName(rl) {
+  while (true) {
+    const ans = (await rl.question("Name your first agent (snake_case), or Enter to skip: ")).trim()
+    if (!ans) return null
+    if (AGENT_RE.test(ans)) return ans
+    const hint = ans.toLowerCase().replace(/[\s-]+/g, "_")
+    console.log(
+      `  ✖ "${ans}" isn't a valid agent name (snake_case; nesting ok: dept/name).` +
+        (AGENT_RE.test(hint) ? ` Did you mean "${hint}"?` : "")
+    )
   }
 }
 
