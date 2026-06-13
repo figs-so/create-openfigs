@@ -16,15 +16,15 @@ jobs:
       matrix:
         node: [18, 20]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Check out openfigs (test skeleton source)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: figs-so/openfigs
           path: .openfigs
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
 
