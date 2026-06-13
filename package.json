@@ -1,7 +1,7 @@
 {
   "name": "create-openfigs",
-  "version": "0.1.1",
-  "description": "Scaffold a new OpenFigs fleet — a file-based skeleton for building back-office AI-employee agents that report to Figs.",
+  "version": "1.0.0",
+  "description": "Scaffold one OpenFigs employee — a file-based skeleton for building a back-office AI-employee agent that reports to Figs.",
   "type": "module",
   "bin": {
     "create-openfigs": "./index.mjs"
