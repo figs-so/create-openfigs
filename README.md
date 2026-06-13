@@ -29,6 +29,9 @@ npx create-openfigs [dir] [--yes] [--here] [--from <source>] [--no-init]
 4. **Runs `figs init`** (account-free, zero-flag) — so the agent has a **local identity + activity
    journal** and is ready to work with no account. (Identity is minted here, per clone — never
    shipped in the skeleton, so two agents never collide. Skip with `--no-init`.)
+5. **`git init`s the repo** with a first commit — a scaffolded agent is a real repo (the skeleton
+   commits `config.json` / `agent.json` / `CONTRACT.md`; the journal + credentials stay gitignored).
+   **Skipped if the target lands inside an existing repo** (e.g. `--here` in a monorepo).
 
 Then:
 

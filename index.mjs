@@ -6,8 +6,9 @@
  *   npx create-openfigs [dir] [--yes] [--here] [--from <source>] [--no-init]
  *
  * Fetches the current OpenFigs skeleton into <dir>, regenerates the runtime symlink
- * (CLAUDE.md -> AGENTS.md, .claude/skills -> .agents/skills), stamps the agent's name, and runs
- * `figs init` (account-free) so the agent has a local identity + journal and is ready to work.
+ * (CLAUDE.md -> AGENTS.md, .claude/skills -> .agents/skills), stamps the agent's name, runs
+ * `figs init` (account-free) so the agent has a local identity + journal, and `git init`s the repo
+ * with a first commit (skipped if <dir> lands inside an existing repo).
  *
  * One repo = one employee. For a team, run this once per job and point them at the same Figs
  * workspace — the org chart draws itself. NEVER copy a scaffolded folder to make another (a copy
@@ -64,7 +65,12 @@ async function main() {
     // 4. Mint a local identity + journal (account-free). Best-effort — degrade with a clear hint.
     const inited = opts.noInit ? null : runInit(target)
 
-    nextSteps(dir, name, inited)
+    // 5. Make it a real git repo (+ first commit) — "a clone is yours" should literally be a repo:
+    //    the skeleton tells you to commit config/agent/CONTRACT, and sandboxed runtimes (e.g. codex)
+    //    refuse a non-repo dir. Skip if we're already inside a work tree (don't nest in a monorepo).
+    const repo = maybeGitInit(target)
+
+    nextSteps(dir, name, inited, repo)
   } finally {
     rl?.close()
   }
@@ -90,6 +96,43 @@ function runInit(target) {
     return true
   } catch {
     return false
+  }
+}
+
+/**
+ * Make the new repo an actual git repo with a first commit, so "a clone is yours" is literally a
+ * repo: the skeleton's docs say to commit config.json/agent.json/CONTRACT.md, and sandboxed runtimes
+ * (e.g. codex) refuse a non-repo dir. The .gitignore the skeleton ships keeps the journal +
+ * credentials out. SKIP if the dir already sits inside a git work tree — don't nest a repo inside a
+ * monorepo. Best-effort: returns "init" | "nested" | false (git unavailable / failed).
+ */
+function maybeGitInit(target) {
+  try {
+    execFileSync("git", ["-C", target, "rev-parse", "--is-inside-work-tree"], { stdio: "ignore" })
+    return "nested" // already inside a repo — leave version control to the parent
+  } catch {
+    /* not in a repo — initialize one */
+  }
+  try {
+    execFileSync("git", ["-C", target, "init", "-q"], { stdio: "ignore" })
+    execFileSync("git", ["-C", target, "add", "-A"], { stdio: "ignore" })
+    const commit = (idArgs) =>
+      execFileSync("git", ["-C", target, ...idArgs, "commit", "-q", "-m", "scaffold OpenFigs employee"], {
+        stdio: "ignore",
+      })
+    // Use the user's git identity if configured; otherwise a neutral fallback so the commit lands.
+    try {
+      commit([])
+    } catch {
+      try {
+        commit(["-c", "user.name=OpenFigs", "-c", "user.email=scaffold@openfigs.local"])
+      } catch {
+        /* init succeeded, commit didn't — the repo still exists, which is the point */
+      }
+    }
+    return "init"
+  } catch {
+    return false // git unavailable — degrade silently
   }
 }
 
@@ -163,9 +206,12 @@ function parseArgs(argv) {
   return opts
 }
 
-function nextSteps(dir, name, inited) {
+function nextSteps(dir, name, inited, repo) {
   const cd = dir === "." ? "" : `cd ${dir}\n  `
-  console.log(`\n✔ Done — "${name}" scaffolded${inited ? " and figs-initialized (local identity + journal)." : "."}\n`)
+  const tags =
+    `${inited ? " + figs-initialized (local identity + journal)" : ""}` +
+    `${repo === "init" ? " + git-initialized" : ""}`
+  console.log(`\n✔ Done — "${name}" scaffolded${tags}.\n`)
   console.log(`  ${cd}# read AGENTS.md, then fill your charter in .figs/agent.json (role, mandate, department)`)
   if (inited === false)
     console.log(`  npx @figs-so/cli@latest init   # mint your local identity + journal (couldn't run it automatically)`)
