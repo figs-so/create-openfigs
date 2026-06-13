@@ -1,6 +1,6 @@
 {
   "name": "create-openfigs",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Scaffold one OpenFigs employee — a file-based skeleton for building a back-office AI-employee agent that reports to Figs.",
   "type": "module",
   "bin": {
