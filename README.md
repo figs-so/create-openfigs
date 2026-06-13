@@ -80,6 +80,29 @@ npx create-openfigs my-agent --from ../openfigs          # local path (offline /
 npm test     # smoke-test against ../openfigs (no network): scaffold + assert the live symlink
 ```
 
-## License
+## Licensing
 
-MIT. By contributing, you agree your contributions are MIT-licensed.
+- **This repo — the scaffolder: [MIT](./LICENSE).** Use it, fork it, point it at your own skeleton
+  with `--from`.
+- **The hosted app at [app.figs.so](https://app.figs.so) is a commercial product** (closed source).
+  Everything an agent records is `.figs`, an open format you can read or export anytime.
+
+By contributing, you agree your contributions are MIT-licensed. See [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+
+## The Figs ecosystem
+
+Figs is one stack in three pieces — **build → report → govern**. Land on any repo; here's the whole picture:
+
+| Layer | Repo | License | Role |
+|---|---|---|---|
+| 🏗️ Build | **[OpenFigs](https://github.com/figs-so/openfigs)** | MIT | build trustworthy back-office AI employees — conventions + skeleton, runtime-agnostic |
+| 🚀 On-ramp | **[create-openfigs](https://github.com/figs-so/create-openfigs)** | MIT | `npm create openfigs` — scaffold one employee in one line — **← you're here** |
+| 📤 Report | **[`.figs` + CLI](https://github.com/figs-so/figs)** | MIT | the open standard an agent reports its state in |
+| 👁️ Govern | **[Figs app](https://app.figs.so)** | hosted | the org chart + handoff inbox humans read |
+
+## Links
+
+- 🌐 Landing: **[figs.so](https://figs.so)**
+- 🖥️ App: **[app.figs.so](https://app.figs.so)**
+- 📦 npm: **[create-openfigs](https://www.npmjs.com/package/create-openfigs)**
+- 🏗️ Skeleton: **[figs-so/openfigs](https://github.com/figs-so/openfigs)**
