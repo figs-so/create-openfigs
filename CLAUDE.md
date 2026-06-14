@@ -12,8 +12,9 @@ see `CONTRIBUTING.md`.
 2. **Regenerates the cross-runtime symlinks** — `CLAUDE.md` → `AGENTS.md` and `.claude/skills` →
    `.agents/skills` — so Claude Code, Codex, and opencode read one source of truth.
 3. **Stamps the agent's name** into the skeleton's placeholders.
-4. **Runs `figs init`** (account-free) so the clone has a local identity + activity journal, ready
-   to work with no account. Skip with `--no-init`.
+4. **Runs `figs init --yes`** (account-free) so the clone has a local identity + activity journal,
+   ready to work with no account. `--yes` confirms Figs is a fit — choosing `npm create openfigs` IS
+   that decision (init's first-time fit gate is for bare `figs init` elsewhere). Skip with `--no-init`.
 5. **`git init`s the repo** + a first commit ("a clone is yours" should literally be a repo — the
    skeleton commits config/agent/CONTRACT, and sandboxed runtimes won't refuse a non-repo dir).
    **Skipped if `<dir>` lands inside an existing repo** (e.g. `--here` in a monorepo) — never nests.
@@ -29,8 +30,8 @@ see `CONTRIBUTING.md`.
 4. **One fresh identity per scaffold.** `figs init` mints a new `agentId` per clone; identity is
    **never** baked into the skeleton. So two scaffolds never collide — and **a copied folder carries
    the original's identity**. Never instruct anyone to copy a scaffolded agent to make another;
-   scaffold fresh. (Rotate a mistakenly-copied identity with `rm -rf .figs && figs init`; the server
-   also refuses a push whose `name` differs from the one registered for that `agentId`.)
+   scaffold fresh. (Rotate a mistakenly-copied identity with `rm -rf .figs && figs init --yes`; the
+   server also refuses a push whose `name` differs from the one registered for that `agentId`.)
 5. **Account-free by default.** Scaffolding + `figs init` complete with no Figs account and no
    network beyond the skeleton fetch. Login/link/push are the user's later, opt-in steps.
 

@@ -85,14 +85,17 @@ function substituteName(target, name) {
 }
 
 /**
- * Run `figs init` (account-free, zero-flag) in the new repo so it has a fresh identity + journal.
- * Best-effort: returns true if it ran, false if it couldn't (offline / npx unavailable) — the
- * caller then tells the user to run it themselves. We deliberately do NOT ship a `.figs/config.json`
- * in the skeleton (identity is minted here, per clone — never copied).
+ * Run `figs init --yes` (account-free) in the new repo so it has a fresh identity + journal.
+ * `--yes` confirms Figs is a fit — and it is: choosing `npm create openfigs` IS that decision, so the
+ * scaffolder passes it (init's first-time fit gate is for bare `figs init` in an undecided repo, not
+ * here). The skeleton already ships the baked Figs operating stance in `AGENTS.md`, so there's no
+ * separate bake step. Best-effort: returns true if it ran, false if it couldn't (offline / npx
+ * unavailable) — the caller then tells the user to run it themselves. We deliberately do NOT ship a
+ * `.figs/config.json` in the skeleton (identity is minted here, per clone — never copied).
  */
 function runInit(target) {
   try {
-    execFileSync("npx", ["-y", "@figs-so/cli@latest", "init"], { cwd: target, stdio: "inherit" })
+    execFileSync("npx", ["-y", "@figs-so/cli@latest", "init", "--yes"], { cwd: target, stdio: "inherit" })
     return true
   } catch {
     return false
