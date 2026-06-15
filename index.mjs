@@ -215,7 +215,8 @@ function nextSteps(dir, name, inited, repo) {
     `${inited ? " + figs-initialized (local identity + journal)" : ""}` +
     `${repo === "init" ? " + git-initialized" : ""}`
   console.log(`\n✔ Done — "${name}" scaffolded${tags}.\n`)
-  console.log(`  ${cd}# read AGENTS.md, then fill your charter in .figs/agent.json (role, mandate, department)`)
+  console.log(`  ${cd}# first: read the Figs guide once → https://figs.so/llms.txt  (then delete the read-me block atop AGENTS.md)`)
+  console.log(`  # then read AGENTS.md + fill your charter in .figs/agent.json (role, mandate, department)`)
   if (inited === false)
     console.log(`  npx @figs-so/cli@latest init   # mint your local identity + journal (couldn't run it automatically)`)
   console.log(`  # work — figs records you locally from day one, no account needed`)
